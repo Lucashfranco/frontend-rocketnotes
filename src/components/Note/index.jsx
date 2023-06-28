@@ -3,7 +3,7 @@ import { Tag } from '../Tag';
 
 export function Note({data, onClick, ...rest}){
     return(
-        <Container{...rest}>
+        <Container{...rest} onClick={onClick}>
             <h1>{data.title}</h1>
 
             {
@@ -11,7 +11,7 @@ export function Note({data, onClick, ...rest}){
                 <footer>
                     {
                         data.tags.map(tag => <Tag key={tag.id} title= {tag.name}
-                        onClick={onClick}
+                    
                         /> )
                   }
                     </footer>
