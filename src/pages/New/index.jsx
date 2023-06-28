@@ -23,6 +23,7 @@ const [tags, setTags] = useState([]);
 const [newTag, setNewTag] = useState("");
 
 const navigate = useNavigate();
+ const [isLoading, setLoading] = useState(false);
 
 function handleBack(){
     navigate(-1);
@@ -47,6 +48,7 @@ function handleRemoveTag(deleted) {
 }
 
 async function handleNewNote(){
+    setLoading(true);
     if(!title) {
         return alert ("Digite o título da nota.");
     }
@@ -59,14 +61,21 @@ async function handleNewNote(){
     if(newLink) {
         return alert("Você deixou um link no campo para adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vázio");
     }
-    await api.post("/notes", {
+    try {
+         await api.post("/notes", {
         title,
         description,
         tags,
         links
     });
+    } catch(e) {
+        alert ("Ocorreu um erro: " + e.error);
+    }
+   
     alert("Nota criada com sucesso!");
+    setLoading(false);
     navigate(-1);
+
 }
 
 
@@ -141,11 +150,14 @@ async function handleNewNote(){
                 />
             </div>
             </Section>
-
+             {isLoading ?     
             <Button 
             title="Salvar"
+            disabled
             onClick={handleNewNote}
-            />
+            /> : <Button title="Salvar"
+            onClick={handleNewNote}/>
+             }
                 </Form>
             </main>
         </Container>

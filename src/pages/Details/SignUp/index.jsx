@@ -10,29 +10,27 @@ export function SignUp() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const [isLoading, setLoading] = useState(false);
 
 
 
     const navigate = useNavigate();
 
-    function handleSignUp(){
+    async function handleSignUp(){
+        setLoading(true);
         if(!name || !email || !password) {
            return alert ("Preencha todos os campos!");
         }
-
-        api.post("/users", { name, email, password })
-        .then(() => {
+        
+        var response = await api.post("/users", { name, email, password })
+        if(response.status === 201) {
             alert("Usuário cadastrado com sucesso!");
-            navigate("/");
-        })
-        .catch(error => {
-            if (error.response) {
-                alert (error.response.data.message);
-            } else {
-                alert("Não foi possível cadastrar");
-            }
-        });
+            navigate("/");  
+        } else {
+            alert("Não foi possível cadastrar");
+        }
+            
+        setLoading(false);
     }
 
 
@@ -67,8 +65,15 @@ export function SignUp() {
 
            />
 
-            <Button title="Cadastrar" onClick={handleSignUp}/>
-
+            {isLoading ? 
+            <Button title="Cadastrar" 
+            disabled
+            onClick={handleSignUp}/> 
+            : <Button title="Cadastrar" 
+            onClick={handleSignUp} 
+           
+            />
+            }
             <Link to="/">
                 Voltar para o login
             </Link>
