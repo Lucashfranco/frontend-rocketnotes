@@ -15,10 +15,14 @@ import { Link } from 'react-router-dom';
             const [email, setEmail] = useState("");
             const [password, setPassword] = useState("");
             const { signIn} = useAuth();
+            const [isLoading, setLoading] = useState(false);
 
 
-    function handleSignIn(){
-        signIn({email, password});
+    async function handleSignIn(){
+        setLoading(true);
+        await signIn({email, password});
+
+        setLoading(false)
     }
 
 
@@ -43,9 +47,14 @@ import { Link } from 'react-router-dom';
             icon={FiLock}
             onChange={e => setPassword(e.target.value)}
            />
-
-            <Button title="Entrar" onClick={handleSignIn}/>
-
+            {isLoading ?
+            <Button
+             title="Entrar"
+             disabled
+              onClick={handleSignIn}/>
+              : <Button title="Entrar"
+              onClick={handleSignIn}/>
+              }
             <Link to="/register">
                 Criar conta
             </Link>
