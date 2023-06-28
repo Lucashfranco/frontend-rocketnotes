@@ -16,20 +16,25 @@ export function SignUp() {
 
     const navigate = useNavigate();
 
-    async function handleSignUp(){
+    function handleSignUp(){
         setLoading(true);
         if(!name || !email || !password) {
            return alert ("Preencha todos os campos!");
         }
-        
-        var response = await api.post("/users", { name, email, password })
-        if(response.status === 201) {
+
+        api.post("/users", { name, email, password })
+        .then(() => {
             alert("Usuário cadastrado com sucesso!");
-            navigate("/");  
-        } else {
-            alert("Não foi possível cadastrar");
-        }
+            navigate("/");
+        })
+        .catch(error => {
+            if (error.response) {
+                alert (error.response.data.message);
+            } else {
+                alert("Não foi possível cadastrar");
+            }
             
+        });
         setLoading(false);
     }
 

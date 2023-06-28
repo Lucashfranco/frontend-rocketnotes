@@ -11,6 +11,7 @@ import avatarPlaceholder from '../../../assets/avatar_placeholder.svg';
 
 
 export function Profile() {
+    
     const { user, updateProfile } = useAuth();
 
     const [name, setName] = useState(user.name);
@@ -21,24 +22,29 @@ export function Profile() {
     const avatarUrl = user.avatar ? `${api.defaults.baseURL}/files/${user.avatar}` : avatarPlaceholder;
     const [avatar, setAvatar] = useState(avatarUrl);
     const [avatarFile, setAvatarFile] = useState(null);
-
+    const [isLoading, setLoading] = useState(false)
     const navigate = useNavigate();
+
 
     function handleBack(){
         navigate(-1);
         }
-
+        
     async function handleUpdate(){
+        setLoading(true);
         const updated = {
             name,
             email,
             password: passwordNew,
             old_password: passwordOld,
         };
+        
 
         const userUpdated = Object.assign(user, updated);
 
         await updateProfile({user: userUpdated, avatarFile});
+        setLoading(false);
+        
     }
 
     function handleChangeAvatar(event){
@@ -107,8 +113,14 @@ export function Profile() {
         onChange={e => setPasswordNew(e.target.value)}
 
         />
-
-        <Button title="Salvar" onClick={handleUpdate}/>
+        {isLoading ?
+            <Button 
+            title="Salvar"
+            disabled
+            onClick={handleUpdate}
+            /> : <Button title="Salvar"
+            onClick={handleUpdate}/>
+             }
         </Form>
         </Container>
     )

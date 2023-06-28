@@ -50,28 +50,34 @@ function handleRemoveTag(deleted) {
 async function handleNewNote(){
     setLoading(true);
     if(!title) {
+        setLoading(false);
         return alert ("Digite o título da nota.");
+    }
+
+    if(!description) {
+        setLoading(false);
+        return alert ("Escreva a descrição!");
     }
 
     
     if(newTag) {
+        setLoading(false);
         return alert("Você deixou uma tag no campo para adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vázio");
     }
 
     if(newLink) {
+        setLoading(false);
         return alert("Você deixou um link no campo para adicionar, mas não clicou em adicionar. Clique para adicionar ou deixe o campo vázio");
     }
-    try {
-         await api.post("/notes", {
+            
+        var response = await api.post("/notes", {
         title,
         description,
         tags,
         links
-    });
-    } catch(e) {
-        alert ("Ocorreu um erro: " + e.error);
-    }
-   
+ 
+         });
+        
     alert("Nota criada com sucesso!");
     setLoading(false);
     navigate(-1);
